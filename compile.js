@@ -1,8 +1,13 @@
 const fs = require("fs");
-const { paramCase, snakeCase } = require('change-case');
-const { titleCase } = require('title-case');
+const { paramCase, snakeCase } = require("change-case");
+const { titleCase } = require("title-case");
 
-function generateIndexHtml(sagaName, folderName, navBarHtml, titlesByFolderName) {
+function generateIndexHtml(
+  sagaName,
+  folderName,
+  navBarHtml,
+  titlesByFolderName
+) {
   const folderPath = `${__dirname}/${snakeCase(sagaName)}/${folderName}`;
   const partialText = fs.readFileSync(`${folderPath}/partial.html`, "utf8");
   const titleMatch = partialText.match(/<h2>(.*)<\/h2>/);
@@ -50,11 +55,15 @@ function generateNavBarHtml(sagaName, currentFolderName, folderNames) {
 }
 
 function generateGlobalIndexHtml(sagaName, titlesByFolderName) {
-  const sortedFolderNames = Object.keys(titlesByFolderName).sort((a, b) => a - b);
+  const sortedFolderNames = Object.keys(titlesByFolderName).sort(
+    (a, b) => a - b
+  );
 
   const sagaDescriptions = {
-    'donut saga': 'These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.',
-    praxis: 'These stories tell the saga of the world of Praxis and a group of adventurers that reshaped its future.',
+    "donut saga":
+      "These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.",
+    praxis:
+      "These stories tell the saga of the world of Praxis and a group of adventurers that reshaped its future.",
   };
 
   return `
@@ -72,16 +81,20 @@ function generateGlobalIndexHtml(sagaName, titlesByFolderName) {
     <p>
       ${sagaDescriptions[sagaName]}
     </p>
-    ${sortedFolderNames.map((folderName) => {
-      return `<div><a href="/praxis/${folderName}">Episode ${folderName}: ${titlesByFolderName[folderName]}</a></div>`;
-    }).join('\n')}
+    ${sortedFolderNames
+      .map((folderName) => {
+        return `<div><a href="/praxis/${folderName}">Episode ${folderName}: ${titlesByFolderName[folderName]}</a></div>`;
+      })
+      .join("\n")}
   </body>
 </html>
 `;
 }
 
 function generateSagaHtml(sagaName) {
-  const folderNames = fs.readdirSync(`${__dirname}/${snakeCase(sagaName)}`).filter((n) => n !== 'index.html');
+  const folderNames = fs
+    .readdirSync(`${__dirname}/${snakeCase(sagaName)}`)
+    .filter((n) => n !== "index.html");
 
   const titlesByFolderName = {};
 
@@ -89,15 +102,23 @@ function generateSagaHtml(sagaName) {
     const folderPath = `${__dirname}/${snakeCase(sagaName)}/${folderName}`;
     fs.writeFileSync(
       `${folderPath}/index.html`,
-      generateIndexHtml(sagaName, folderName, generateNavBarHtml(sagaName, folderName, folderNames), titlesByFolderName)
+      generateIndexHtml(
+        sagaName,
+        folderName,
+        generateNavBarHtml(sagaName, folderName, folderNames),
+        titlesByFolderName
+      )
     );
   }
 
-  fs.writeFileSync(`${__dirname}/${snakeCase(sagaName)}/index.html`, generateGlobalIndexHtml(sagaName, titlesByFolderName));
+  fs.writeFileSync(
+    `${__dirname}/${snakeCase(sagaName)}/index.html`,
+    generateGlobalIndexHtml(sagaName, titlesByFolderName)
+  );
 }
 
 function main() {
-  const sagaNames = ['praxis', 'donut saga'];
+  const sagaNames = ["praxis", "donut saga"];
   for (const sagaName of sagaNames) {
     generateSagaHtml(sagaName);
   }
