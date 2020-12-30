@@ -1,0 +1,8 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "main": "compile.js",
+  "repository": "git@github.com:Vadskye/personal-website.git",
+  "author": "Kevin Johnson <vadskye@gmail.com>",
+  "license": "MIT"
+}
