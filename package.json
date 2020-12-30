@@ -6,6 +6,7 @@
   "author": "Kevin Johnson <vadskye@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "change-case": "^4.1.2",
     "title-case": "^3.0.3"
   },
   "devDependencies": {
