@@ -11,7 +11,7 @@ function generateIndexHtml(
   titlesByFolderName
 ) {
   const folderPath = `${__dirname}/${snakeCase(sagaName)}/${folderName}`;
-  const partialText = fs.readFileSync(`${folderPath}/partial.html`, "utf8");
+  const partialText = fs.readFileSync(folderPath, "utf8");
   const titleMatch = partialText.match(/<h2>(.*)<\/h2>/);
   if (!(titleMatch && titleMatch[1])) {
     throw new Error(`Error processing ${folderPath}: No h2 tag found`);
