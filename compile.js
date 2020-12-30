@@ -83,7 +83,7 @@ function generateGlobalIndexHtml(sagaName, titlesByFolderName) {
     </p>
     ${sortedFolderNames
       .map((folderName) => {
-        return `<div><a href="/praxis/${folderName}">Episode ${folderName}: ${titlesByFolderName[folderName]}</a></div>`;
+        return `<div><a href="/${paramCase(sagaName)}/${folderName}">Episode ${folderName}: ${titlesByFolderName[folderName]}</a></div>`;
       })
       .join("\n")}
   </body>
