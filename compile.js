@@ -83,7 +83,11 @@ function generateGlobalIndexHtml(sagaName, titlesByFolderName) {
     </p>
     ${sortedFolderNames
       .map((folderName) => {
-        return `<div><a href="/${paramCase(sagaName)}/${folderName}">Episode ${folderName}: ${titlesByFolderName[folderName]}</a></div>`;
+        return `<div><a href="/${paramCase(
+          sagaName
+        )}/${folderName}">Episode ${folderName}: ${
+          titlesByFolderName[folderName]
+        }</a></div>`;
       })
       .join("\n")}
   </body>
@@ -99,7 +103,9 @@ function generateSagaHtml(sagaName, outputDirectoryPath) {
   const titlesByFolderName = {};
 
   for (const folderName of folderNames) {
-    const episodeOutputDirectoryPath = `${outputDirectoryPath}/${paramCase(sagaName)}/${folderName}`;
+    const episodeOutputDirectoryPath = `${outputDirectoryPath}/${paramCase(
+      sagaName
+    )}/${folderName}`;
     fs.mkdirSync(episodeOutputDirectoryPath, { recursive: true });
     fs.writeFileSync(
       `${episodeOutputDirectoryPath}/index.html`,
@@ -119,9 +125,12 @@ function generateSagaHtml(sagaName, outputDirectoryPath) {
 }
 
 function main() {
-  const outputDirectoryPath =  '/var/www/html';
+  const outputDirectoryPath = "/var/www/html";
   // Copy over the root index.html file
-  fs.copyFileSync(`${__dirname}/index.html`, `${outputDirectoryPath}/index.html`);
+  fs.copyFileSync(
+    `${__dirname}/index.html`,
+    `${outputDirectoryPath}/index.html`
+  );
 
   const sagaNames = ["praxis", "donut saga"];
   for (const sagaName of sagaNames) {
