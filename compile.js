@@ -11,7 +11,7 @@ function generateIndexHtml(
   titlesByFolderName
 ) {
   const folderPath = `${__dirname}/${snakeCase(sagaName)}/${folderName}`;
-  const partialText = fs.readFileSync(folderPath, "utf8");
+  const partialText = fs.readFileSync(`${folderPath}.html`, "utf8");
   const titleMatch = partialText.match(/<h2>(.*)<\/h2>/);
   if (!(titleMatch && titleMatch[1])) {
     throw new Error(`Error processing ${folderPath}: No h2 tag found`);
@@ -77,7 +77,7 @@ function generateSagaIndexHtml(sagaName, titlesByFolderName) {
         .map((folderName) => {
           return `<div><a href="/${paramCase(
             sagaName
-          )}/${folderName}">Episode ${folderName}: ${
+          )}/${folderName}">Episode ${folderName.replace(/[^0-9]/g, "")}: ${
             titlesByFolderName[folderName]
           }</a></div>`;
         })
@@ -89,7 +89,8 @@ function generateSagaIndexHtml(sagaName, titlesByFolderName) {
 function generateSagaHtml(sagaName, outputDirectoryPath) {
   const folderNames = fs
     .readdirSync(`${__dirname}/${snakeCase(sagaName)}`)
-    .filter((n) => n !== "index.html");
+    .filter((n) => n !== "index.html")
+    .map((n) => n.replace(/[^0-9]/g, ""));
 
   const titlesByFolderName = {};
 
