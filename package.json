@@ -4,5 +4,8 @@
   "main": "compile.js",
   "repository": "git@github.com:Vadskye/personal-website.git",
   "author": "Kevin Johnson <vadskye@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "title-case": "^3.0.3"
+  }
 }
