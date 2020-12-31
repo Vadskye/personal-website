@@ -59,8 +59,10 @@ function generateSagaIndexHtml(sagaName, titlesByFolderName) {
   const sagaDescriptions = {
     "donut saga":
       "These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.",
+    elysium:
+      "These stories tell the saga of a brave group of ex-cultists adrift in time who tried to save the world from demonic corruption.",
     praxis:
-      "These stories tell the saga of the world of Praxis and a group of adventurers that reshaped its future.",
+      "These stories tell the saga of the apocalypse-ravaged world of Praxis and a group of adventurers that reshaped its future.",
   };
 
   return generateHtml({
@@ -145,7 +147,7 @@ function main() {
     generateGlobalIndexHtml()
   );
 
-  const sagaNames = ["praxis", "donut saga"];
+  const sagaNames = ["praxis", "donut saga", "elysium"];
   for (const sagaName of sagaNames) {
     generateSagaHtml(sagaName, outputDirectoryPath);
   }
