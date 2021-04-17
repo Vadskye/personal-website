@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { JSDOM } = require("jsdom");
 const { paramCase, snakeCase } = require("change-case");
 const { titleCase } = require("title-case");
 
@@ -120,8 +121,12 @@ function generateSagaHtml(sagaName, outputDirectoryPath) {
 
 function generateGlobalIndexHtml() {
   return generateHtml({
-    body:
-      "<div>Here you may find a rapidly expanding set of things I've created. Enjoy!</div>",
+    body: `
+      <p>This site has a collection of things I've created. The main attraction is probably the stories of my old RPG campaigns, which are linked along the top. Those were run using the <a href="https://github.com/vadskye/rise">rulebook I'm writing on Github</a>.</p>
+      <p>
+        Also, I made some fun custom cards for a board game called <a href="https://sentinelsdigital.com/learntoplay">Sentinels of the Multiverse</a>! You can find them <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2111698527">on this Steam Workshop mod</a>.
+      </p>
+    `,
   });
 }
 
@@ -139,6 +144,8 @@ function generateHtml({ body, head } = {}) {
 
 function main() {
   const outputDirectoryPath = "/var/www/html";
+  // Copy over the htaccess file
+  fs.copyFileSync(`${__dirname}/.htaccess`, `${outputDirectoryPath}/.htaccess`);
   // Copy over the basic style.css
   fs.copyFileSync(`${__dirname}/style.css`, `${outputDirectoryPath}/style.css`);
   // Create the root index.html file
@@ -151,6 +158,35 @@ function main() {
   for (const sagaName of sagaNames) {
     generateSagaHtml(sagaName, outputDirectoryPath);
   }
+
+  // Copy over the Rise-specific style.css
+  fs.copyFileSync(`${__dirname}/rise.css`, `${outputDirectoryPath}/rise/rise.css`);
+  // TODO: make this a CLI argument so it's easier to use on different systems
+  const riseHtmlDirectoryPath = `${__dirname}/../Rise/html_book`;
+  const htmlFiles = fs
+    .readdirSync(riseHtmlDirectoryPath)
+    .filter((f) => f.includes(".html"));
+  for (const filename of htmlFiles) {
+    const outputHtml = restructureGeneratedRiseHtml(
+      `${riseHtmlDirectoryPath}/${filename}`
+    );
+    fs.writeFileSync(`${outputDirectoryPath}/rise/${filename}`, outputHtml);
+  }
+}
+
+function restructureGeneratedRiseHtml(filename) {
+  const generatedHtml = fs.readFileSync(filename, 'utf8');
+  const parsedHtml = new JSDOM(generatedHtml);
+  const document = parsedHtml.window.document;
+  const style = document.createElement("link");
+  style.type = 'text/css';
+  style.href = '../style.css';
+  style.rel = 'stylesheet';
+  document.head.appendChild(style);
+  return generateHtml({
+    body: document.body.innerHTML,
+    head: document.head.innerHTML,
+  });
 }
 
 if (require.main === module) {
