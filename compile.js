@@ -144,8 +144,6 @@ function generateHtml({ body, head } = {}) {
 
 function main() {
   const outputDirectoryPath = "/var/www/html";
-  // Copy over the htaccess file
-  fs.copyFileSync(`${__dirname}/.htaccess`, `${outputDirectoryPath}/.htaccess`);
   // Copy over the basic style.css
   fs.copyFileSync(`${__dirname}/style.css`, `${outputDirectoryPath}/style.css`);
   // Create the root index.html file
