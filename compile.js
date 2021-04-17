@@ -157,6 +157,8 @@ function main() {
     generateSagaHtml(sagaName, outputDirectoryPath);
   }
 
+  // 'recursive' is basically just to avoid errors if it already exists
+  fs.mkdirSync(`${outputDirectoryPath}/rise`, { recursive: true });
   // Copy over the Rise-specific style.css
   fs.copyFileSync(`${__dirname}/rise.css`, `${outputDirectoryPath}/rise/rise.css`);
   // TODO: make this a CLI argument so it's easier to use on different systems
