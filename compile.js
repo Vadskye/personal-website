@@ -2,6 +2,7 @@ const fs = require("fs");
 const { JSDOM } = require("jsdom");
 const { paramCase, snakeCase } = require("change-case");
 const { titleCase } = require("title-case");
+const childProcess = require("child_process");
 
 let pageTemplateHtml = "";
 
@@ -157,6 +158,11 @@ function main() {
     generateSagaHtml(sagaName, outputDirectoryPath);
   }
 
+  generateRiseBookHtml(outputDirectoryPath)
+}
+
+function generateRiseBookHtml(outputDirectoryPath) {
+  childProcess.execSync(`lessc ${__dirname}/rise.less > rise.css`);
   // 'recursive' is basically just to avoid errors if it already exists
   fs.mkdirSync(`${outputDirectoryPath}/rise`, { recursive: true });
   // Copy over the Rise-specific style.css
