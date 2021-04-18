@@ -1,19 +1,76 @@
 /* Some stuff that looks important from the LaTeX generated CSS */
-.ptmb7t-{ font-weight: bold;}
-.ptmb7t-{ font-weight: bold;}
-.ptmb7t-{ font-weight: bold;}
-.ptmb7t-x-x-90{font-size:90%; font-weight: bold;}
-.ptmb7t-x-x-90{ font-weight: bold;}
-.ptmb7t-x-x-90{ font-weight: bold;}
-.ptmbi7t-{  font-style: italic; font-weight: bold;}
-.ptmb7t-x-x-120{font-size:120%; font-weight: bold;}
-.ptmb7t-x-x-120{ font-weight: bold;}
-.ptmb7t-x-x-120{ font-weight: bold;}
 .partToc a, .partToc, .likepartToc a, .likepartToc {line-height: 200%; font-weight:bold; font-size:110%;}
 .chapterToc a, .chapterToc, .likechapterToc a, .likechapterToc, .appendixToc a, .appendixToc {line-height: 200%; font-weight:bold;}
 div.caption span.id{font-weight: bold; white-space: nowrap; }
 .paragraphHead, .likeparagraphHead { margin-top:2em; font-weight: bold;}
 .subparagraphHead, .likesubparagraphHead { font-weight: bold;}
-figcaption.caption span.id{font-weight: bold; white-space: nowrap; }
 
+// The generated LaTeX applies this to basically everything that could be
+// bolded, but we don't need to double-highlight links.
+.ptmb7t-{ font-weight: bold;}
+a .ptmb7t- {
+    font-weight: normal;
+}
 
+/* Hack to fix the weird display of numbered lists */
+dl.enumerate-enumitem {
+    dt.enumerate-enumitem {
+        position: absolute;
+        margin-left: 0.5em;
+    }
+    dd.enumerate-enumitem {
+        display: block;
+        margin-left: 1.5em;
+    }
+}
+
+/* Fix the display of tables */
+figure.float {
+    margin-left: 0;
+    margin-right: 0;
+
+    figcaption {
+        font-weight: bold;
+
+        > span.id {
+            margin-right: 1ch;
+        }
+    }
+
+    table {
+        border: 1px solid black;
+        border-collapse: separate;
+        font-size: 16px;
+        padding: 0;
+        max-width: 100%;
+        min-width: 50%;
+
+        td {
+            padding-left: 0.25em;
+            padding-right: 0.25em;
+        }
+
+        td:nth-child(1) {
+            padding-left: 0.5em;
+        }
+        td:nth-last-child(1) {
+            padding-right: 0.5em;
+        }
+
+        tr:nth-child(1) {
+            // this basically is just a border, but we want to prevent the table
+            // from doing weird stuff with the border
+            box-shadow: 0 -1px 0 0 black inset;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even){
+          background-color: #fff0c8;
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+
+}
