@@ -166,6 +166,33 @@ figure.float, .longtable {
     }
 }
 
+// There are two crosslinks on each page, and we only care about the first
+.crosslinks {
+    display: none;
+}
+.crosslinks:nth-child(1) {
+    background: white;
+    box-shadow: 0 1px 6px 0 gray;
+    display: block;
+    left: 0;
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+
+    > p {
+        // Should match max-width of body in style.css
+        max-width: 800px;
+        text-align: left;
+        margin-left: 2em;
+        margin-right: 2em;
+    }
+}
+.main-content {
+    // This should match the height of the crosslinks
+    margin-bottom: 36px;
+}
+
 // Some stuff that looks important from the LaTeX generated CSS
 .partToc a, .partToc, .likepartToc a, .likepartToc {line-height: 200%; font-weight:bold; font-size:110%;}
 .chapterToc a, .chapterToc, .likechapterToc a, .likechapterToc, .appendixToc a, .appendixToc {line-height: 200%; font-weight:bold;}
