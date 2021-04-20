@@ -9,6 +9,71 @@ a .ptmri7t- {
     font-style: normal;
 }
 
+// Make the text less spacious
+p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+ul,ol {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+h3,h4,h5 {
+    margin-top: 0.5em;
+    margin-bottom: 0.25em;
+}
+
+// Hide the numeric section prefixes
+h3 .titlemark, h4 .titlemark, h5 .titlemark {
+    display: none;
+}
+.sectionTOCS, .tableofcontents {
+    position: relative;
+
+    .chapterToc, .sectionToc, .appendixToc {
+        visibility: hidden;
+        > a {
+            position: absolute;
+            visibility: visible;
+        }
+    }
+    .chapterToc > a, .appendixToc > a {
+        left: 1em;
+    }
+    .sectionToc > a {
+        left: 2em;
+    }
+}
+
+// Hide subsectionToc and subsubsectionToc entries entirely; they're too detailed
+// We have to do some space fixing shenanigans to make this work since the html
+// originally used hardcoded <br /> for line breaks.
+.sectionTOCS, .tableofcontents {
+    .chapterToc, .sectionToc, .appendixToc {
+        display: block;
+    }
+    .chapterToc, .appendixToc {
+        margin-bottom: -0.25em;
+    }
+    .sectionToc {
+        margin-top: -1.5em;
+    }
+    .subsectionToc, .subsubsectionToc, br {
+        display: none;
+    }
+}
+
+
+// Make section headers stand out more meaningfully
+h4 {
+    // Basically a border, but it's very slightly closer to the text
+    box-shadow: 0 -1px 0 0 black inset;
+}
+h3, h4, h5 {
+    margin-left: -0.5em;
+}
+
+
 /* Hack to fix the weird display of numbered lists */
 dl.enumerate-enumitem {
     dt.enumerate-enumitem {
