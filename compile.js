@@ -145,8 +145,8 @@ function generateHtml({ body, head } = {}) {
 
 function main() {
   const outputDirectoryPath = "/var/www/html";
-  // Copy over the basic style.css
-  fs.copyFileSync(`${__dirname}/style.css`, `${outputDirectoryPath}/style.css`);
+  // Compile the basic style.css
+  childProcess.execSync(`lessc ${__dirname}/style.less > ${outputDirectoryPath}/style.css`);
   // Create the root index.html file
   fs.writeFileSync(
     `${outputDirectoryPath}/index.html`,
