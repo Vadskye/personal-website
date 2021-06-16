@@ -41,6 +41,11 @@ h3 .titlemark, h4 .titlemark, h5 .titlemark {
 .sectionTOCS, .tableofcontents {
     position: relative;
 
+    .likesectionToc {
+        display: none;
+    }
+
+    // If we include .likechapterToc here, it breaks in weird ways
     .chapterToc, .sectionToc, .appendixToc {
         visibility: hidden;
         > a {
@@ -48,11 +53,11 @@ h3 .titlemark, h4 .titlemark, h5 .titlemark {
             visibility: visible;
         }
     }
-    .chapterToc > a, .appendixToc > a {
-        left: 1em;
+    .chapterToc > a, .appendixToc > a, .likechapterToc > a, {
+        left: 0;
     }
     .sectionToc > a {
-        left: 2em;
+        left: 1em;
     }
 }
 
@@ -60,16 +65,16 @@ h3 .titlemark, h4 .titlemark, h5 .titlemark {
 // We have to do some space fixing shenanigans to make this work since the html
 // originally used hardcoded <br /> for line breaks.
 .sectionTOCS, .tableofcontents {
-    .chapterToc, .sectionToc, .appendixToc {
+    .chapterToc, .sectionToc, .appendixToc, .likechapterToc {
         display: block;
     }
-    .chapterToc, .appendixToc {
+    .chapterToc, .appendixToc, .likechapterToc {
         margin-bottom: -0.25em;
     }
     .sectionToc {
         margin-top: -1.5em;
     }
-    .subsectionToc, .subsubsectionToc, br {
+    .subsectionToc, .subsubsectionToc, br, .likesubsectionToc {
         display: none;
     }
 }
