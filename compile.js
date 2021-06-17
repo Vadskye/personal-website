@@ -55,7 +55,6 @@ function generateEpisodeNavBar(sagaName, episodeNumber, allEpisodeNumbers) {
           ? `<a href="/${sagaUrl}/${episodeNumber - 1}">Previous</a>`
           : "<div></div>"
       }
-      <a href="/tales">Index</a>
       ${
         allEpisodeNumbers.includes(episodeNumber + 1)
           ? `<a href="/${sagaUrl}/${episodeNumber + 1}">Next</a>`
@@ -214,7 +213,7 @@ function writeSentinelsHtml(outputDirectoryPath) {
   });
   fs.mkdirSync(`${outputDirectoryPath}/sentinels`, { recursive: true });
   fs.writeFileSync(`${outputDirectoryPath}/sentinels/index.html`, sentinelsHtml);
-  for (const collection of ['dark-souls', 'gatewatch', 'krumit', 'oots', 'ravnica']) {
+  for (const collection of ['dark-souls', 'gatewatch', 'ixalan', 'krumit', 'oots', 'other', 'ravnica']) {
     const collectionText = fs.readFileSync(`${__dirname}/sentinels/${collection}.html`, 'utf8');
     const titleMatch = collectionText.match(/<h1>(.*)<\/h1>/);
     if (!(titleMatch && titleMatch[1])) {
