@@ -6,118 +6,128 @@ const childProcess = require("child_process");
 
 let pageTemplateHtml = "";
 
-function generateIndexHtml(
-  sagaName,
-  folderName,
-  navBarHtml,
-  titlesByFolderName
-) {
-  const folderPath = `${__dirname}/${snakeCase(sagaName)}/${folderName}`;
-  const partialText = fs.readFileSync(`${folderPath}.html`, "utf8");
-  const titleMatch = partialText.match(/<h2>(.*)<\/h2>/);
+function parseEpisodeInfo(saga, episodeNumber) {
+  const episodeFilename = `${__dirname}/${snakeCase(
+    saga
+  )}/${episodeNumber}.html`;
+  const episodeText = fs.readFileSync(episodeFilename, "utf8");
+  const titleMatch = episodeText.match(/<h2>(.*)<\/h2>/);
   if (!(titleMatch && titleMatch[1])) {
-    throw new Error(`Error processing ${folderPath}: No h2 tag found`);
+    throw new Error(
+      `Error processing episode ${episodeNumber}: No h2 tag found`
+    );
   }
-  titlesByFolderName[folderName] = titleMatch[1];
+  return {
+    link: `<div><a href="/${paramCase(
+      saga
+    )}/${episodeNumber}">Episode ${episodeNumber}: ${titleMatch[1]}</a></div>`,
+    number: episodeNumber,
+    text: episodeText,
+    title: titleMatch[1],
+  };
+}
+
+function generateEpisodeHtml(saga, episode, allEpisodes) {
+  const navBarHtml = generateEpisodeNavBar(
+    saga,
+    episode.number,
+    allEpisodes.map((e) => e.number)
+  );
   return generateHtml({
-    head: `<title>${titleCase(sagaName)} ${folderName}: ${
-      titleMatch[1]
+    head: `<title>${titleCase(saga)} ${episode.number}: ${
+      episode.title
     }</title>`,
     body: `
       ${navBarHtml}
-      ${partialText}
+      ${episode.text}
       ${navBarHtml}
     `,
   });
 }
 
-function generateNavBarHtml(sagaName, currentFolderName, folderNames) {
-  const previousFolderName = (Number(currentFolderName) - 1).toString();
-  const nextFolderName = (Number(currentFolderName) + 1).toString();
+function generateEpisodeNavBar(sagaName, episodeNumber, allEpisodeNumbers) {
   const sagaUrl = paramCase(sagaName);
 
   return `
     <div class="nav-bar">
       ${
-        folderNames.includes(previousFolderName)
-          ? `<a href="/${sagaUrl}/${previousFolderName}">Previous</a>`
+        allEpisodeNumbers.includes(episodeNumber - 1)
+          ? `<a href="/${sagaUrl}/${episodeNumber - 1}">Previous</a>`
           : "<div></div>"
       }
-      <a href="/${sagaUrl}">${titleCase(sagaName)} Index</a>
+      <a href="/tales">Index</a>
       ${
-        folderNames.includes(nextFolderName)
-          ? `<a href="/${sagaUrl}/${nextFolderName}">Next</a>`
+        allEpisodeNumbers.includes(episodeNumber + 1)
+          ? `<a href="/${sagaUrl}/${episodeNumber + 1}">Next</a>`
           : "<div></div>"
       }
     </div>
   `;
 }
 
-function generateSagaIndexHtml(sagaName, titlesByFolderName) {
-  const sortedFolderNames = Object.keys(titlesByFolderName).sort(
-    (a, b) => a - b
-  );
-
-  const sagaDescriptions = {
-    "donut saga":
-      "These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.",
-    elysium:
-      "These stories tell the saga of a brave group of ex-cultists adrift in time who tried to save the world from demonic corruption.",
-    praxis:
-      "These stories tell the saga of the apocalypse-ravaged world of Praxis and a group of adventurers that reshaped its future.",
+function writeTalesHtml(outputDirectoryPath) {
+  const episodesBySaga = {
+    "donut saga": [],
+    elysium: [],
+    praxis: [],
   };
 
-  return generateHtml({
-    head: `<title>${titleCase(sagaName)}</title>`,
+  // Read the files for each episode so we can understand all the context we need
+  for (const saga of Object.keys(episodesBySaga)) {
+    const episodeNumbers = fs
+      .readdirSync(`${__dirname}/${snakeCase(saga)}`)
+      .filter((n) => n !== "index.html")
+      .map((n) => Number(n.replace(/[^0-9]/g, "")));
+    episodeNumbers.sort((a, b) => a - b);
+    episodesBySaga[saga] = episodeNumbers.map((n) => parseEpisodeInfo(saga, n));
+  }
+
+  // Write the individual files for each episode
+  for (const saga of Object.keys(episodesBySaga)) {
+    for (const episode of episodesBySaga[saga]) {
+      const episodeHtml = generateEpisodeHtml(
+        saga,
+        episode,
+        episodesBySaga[saga]
+      );
+      // We create one folder for each episode, and fill that folder with a single
+      // index.html file.
+      const episodeOutputDirectoryPath = `${outputDirectoryPath}/${paramCase(
+        saga
+      )}/${episode.number}`;
+      fs.mkdirSync(episodeOutputDirectoryPath, { recursive: true });
+      fs.writeFileSync(`${episodeOutputDirectoryPath}/index.html`, episodeHtml);
+    }
+  }
+
+  // Write the overall tales index file
+  const talesIndexHtml = generateHtml({
+    head: `<title>Tales of Games Past</title>`,
     body: `
+      <h1>Tales of Games Past</h1>
       <p>
         Whenever I run a major RPG campaign, I send out emails each week summarizing the events of the previous week.
         This helps the players and me keep track of what's going on, it's fun to write, and it helps any players that missed a week catch up on what they missed.
       </p>
+      <h2>The Tale of Praxis</h2>
       <p>
-        ${sagaDescriptions[sagaName]}
+        These stories tell the saga of the apocalypse-ravaged world of Praxis and a group of adventurers that reshaped its future.
       </p>
-      ${sortedFolderNames
-        .map((folderName) => {
-          return `<div><a href="/${paramCase(
-            sagaName
-          )}/${folderName}">Episode ${folderName.replace(/[^0-9]/g, "")}: ${
-            titlesByFolderName[folderName]
-          }</a></div>`;
-        })
-        .join("\n")}
+      ${episodesBySaga.praxis.map((e) => e.link).join("\n")}
+      <h2>Ex-Cultists of Elysium</h2>
+      <p>
+        These stories tell the saga of a brave group of ex-cultists adrift in time who tried to save the world from demonic corruption.
+      </p>
+      ${episodesBySaga.elysium.map((e) => e.link).join("\n")}
+      <h2>The Donut Saga</h2>
+      <p>
+        These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.
+      </p>
+      ${episodesBySaga['donut saga'].map((e) => e.link).join("\n")}
     `,
   });
-}
-
-function generateSagaHtml(sagaName, outputDirectoryPath) {
-  const folderNames = fs
-    .readdirSync(`${__dirname}/${snakeCase(sagaName)}`)
-    .filter((n) => n !== "index.html")
-    .map((n) => n.replace(/[^0-9]/g, ""));
-
-  const titlesByFolderName = {};
-
-  for (const folderName of folderNames) {
-    const episodeOutputDirectoryPath = `${outputDirectoryPath}/${paramCase(
-      sagaName
-    )}/${folderName}`;
-    fs.mkdirSync(episodeOutputDirectoryPath, { recursive: true });
-    fs.writeFileSync(
-      `${episodeOutputDirectoryPath}/index.html`,
-      generateIndexHtml(
-        sagaName,
-        folderName,
-        generateNavBarHtml(sagaName, folderName, folderNames),
-        titlesByFolderName
-      )
-    );
-  }
-
-  fs.writeFileSync(
-    `${outputDirectoryPath}/${paramCase(sagaName)}/index.html`,
-    generateSagaIndexHtml(sagaName, titlesByFolderName)
-  );
+  fs.mkdirSync(`${outputDirectoryPath}/tales`, { recursive: true });
+  fs.writeFileSync(`${outputDirectoryPath}/tales/index.html`, talesIndexHtml);
 }
 
 function generateGlobalIndexHtml() {
@@ -146,26 +156,27 @@ function generateHtml({ body, head } = {}) {
 function main() {
   const outputDirectoryPath = "/var/www/html";
   // Compile the basic style.css
-  childProcess.execSync(`lessc ${__dirname}/style.less > ${outputDirectoryPath}/style.css`);
+  childProcess.execSync(
+    `lessc ${__dirname}/style.less > ${outputDirectoryPath}/style.css`
+  );
   // Create the root index.html file
   fs.writeFileSync(
     `${outputDirectoryPath}/index.html`,
     generateGlobalIndexHtml()
   );
 
-  const sagaNames = ["praxis", "donut saga", "elysium"];
-  for (const sagaName of sagaNames) {
-    generateSagaHtml(sagaName, outputDirectoryPath);
-  }
+  writeTalesHtml(outputDirectoryPath);
 
-  generateRiseBookHtml(outputDirectoryPath)
+  generateRiseBookHtml(outputDirectoryPath);
 }
 
 function generateRiseBookHtml(outputDirectoryPath) {
   // 'recursive' is basically just to avoid errors if it already exists
   fs.mkdirSync(`${outputDirectoryPath}/rise`, { recursive: true });
   // Generate the Rise-specific style.css
-  childProcess.execSync(`lessc ${__dirname}/rise.less > ${outputDirectoryPath}/rise/rise.css`);
+  childProcess.execSync(
+    `lessc ${__dirname}/rise.less > ${outputDirectoryPath}/rise/rise.css`
+  );
   // TODO: make this a CLI argument so it's easier to use on different systems
   const riseHtmlDirectoryPath = `${__dirname}/../Rise/html_book`;
   const htmlFiles = fs
@@ -180,13 +191,13 @@ function generateRiseBookHtml(outputDirectoryPath) {
 }
 
 function restructureGeneratedRiseHtml(filename) {
-  const generatedHtml = fs.readFileSync(filename, 'utf8');
+  const generatedHtml = fs.readFileSync(filename, "utf8");
   const parsedHtml = new JSDOM(generatedHtml);
   const document = parsedHtml.window.document;
   const style = document.createElement("link");
-  style.type = 'text/css';
-  style.href = '../style.css';
-  style.rel = 'stylesheet';
+  style.type = "text/css";
+  style.href = "../style.css";
+  style.rel = "stylesheet";
   document.head.appendChild(style);
   return generateHtml({
     body: document.body.innerHTML,
