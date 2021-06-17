@@ -18,7 +18,7 @@ function parseEpisodeInfo(saga, episodeNumber) {
     );
   }
   return {
-    link: `<div><a href="/${paramCase(
+    link: `<div><a href="/tales/${paramCase(
       saga
     )}/${episodeNumber}">Episode ${episodeNumber}: ${titleMatch[1]}</a></div>`,
     number: episodeNumber,
@@ -92,7 +92,7 @@ function writeTalesHtml(outputDirectoryPath) {
       );
       // We create one folder for each episode, and fill that folder with a single
       // index.html file.
-      const episodeOutputDirectoryPath = `${outputDirectoryPath}/${paramCase(
+      const episodeOutputDirectoryPath = `${outputDirectoryPath}/tales/${paramCase(
         saga
       )}/${episode.number}`;
       fs.mkdirSync(episodeOutputDirectoryPath, { recursive: true });
@@ -164,6 +164,7 @@ function main() {
     `${outputDirectoryPath}/index.html`,
     generateGlobalIndexHtml()
   );
+  writeSentinelsHtml(outputDirectoryPath);
 
   writeTalesHtml(outputDirectoryPath);
 
@@ -203,6 +204,30 @@ function restructureGeneratedRiseHtml(filename) {
     body: document.body.innerHTML,
     head: document.head.innerHTML,
   });
+}
+
+function writeSentinelsHtml(outputDirectoryPath) {
+  const sentinelsText = fs.readFileSync(`${__dirname}/sentinels/index.html`, 'utf8');
+  const sentinelsHtml = generateHtml({
+    head: `<title>Sentinels of the Multiverse</title>`,
+    body: sentinelsText,
+  });
+  fs.mkdirSync(`${outputDirectoryPath}/sentinels`, { recursive: true });
+  fs.writeFileSync(`${outputDirectoryPath}/sentinels/index.html`, sentinelsHtml);
+  for (const collection of ['dark-souls', 'gatewatch', 'krumit', 'oots', 'ravnica']) {
+    const collectionText = fs.readFileSync(`${__dirname}/sentinels/${collection}.html`, 'utf8');
+    const titleMatch = collectionText.match(/<h1>(.*)<\/h1>/);
+    if (!(titleMatch && titleMatch[1])) {
+      throw new Error(
+        `Error processing collection ${collection}: No h1 tag found`
+      );
+    }
+    const collectionHtml = generateHtml({
+      head: `<title>${titleMatch[1]}</title>`,
+      body: collectionText,
+    });
+    fs.writeFileSync(`${outputDirectoryPath}/sentinels/${collection}.html`, collectionHtml);
+  }
 }
 
 if (require.main === module) {
