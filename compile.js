@@ -52,12 +52,12 @@ function generateEpisodeNavBar(sagaName, episodeNumber, allEpisodeNumbers) {
     <div class="nav-bar">
       ${
         allEpisodeNumbers.includes(episodeNumber - 1)
-          ? `<a href="/${sagaUrl}/${episodeNumber - 1}">Previous</a>`
+          ? `<a href="/tales/${sagaUrl}/${episodeNumber - 1}">Previous</a>`
           : "<div></div>"
       }
       ${
         allEpisodeNumbers.includes(episodeNumber + 1)
-          ? `<a href="/${sagaUrl}/${episodeNumber + 1}">Next</a>`
+          ? `<a href="/tales/${sagaUrl}/${episodeNumber + 1}">Next</a>`
           : "<div></div>"
       }
     </div>
@@ -66,6 +66,7 @@ function generateEpisodeNavBar(sagaName, episodeNumber, allEpisodeNumbers) {
 
 function writeTalesHtml(outputDirectoryPath) {
   const episodesBySaga = {
+    "creation mythos": [],
     "donut saga": [],
     elysium: [],
     praxis: [],
@@ -106,23 +107,33 @@ function writeTalesHtml(outputDirectoryPath) {
       <h1>Tales of Games Past</h1>
       <p>
         Whenever I run a major RPG campaign, I send out emails each week summarizing the events of the previous week.
-        This helps the players and me keep track of what's going on, it's fun to write, and it helps any players that missed a week catch up on what they missed.
+        This helps everyone keep track of what's going on, it's fun to write, and it helps any players that missed a week catch up on what they missed.
       </p>
-      <h2>The Tale of Praxis</h2>
-      <p>
-        These stories tell the saga of the apocalypse-ravaged world of Praxis and a group of adventurers that reshaped its future.
-      </p>
-      ${episodesBySaga.praxis.map((e) => e.link).join("\n")}
-      <h2>Ex-Cultists of Elysium</h2>
-      <p>
-        These stories tell the saga of a brave group of ex-cultists adrift in time who tried to save the world from demonic corruption.
-      </p>
-      ${episodesBySaga.elysium.map((e) => e.link).join("\n")}
       <h2>The Donut Saga</h2>
       <p>
         These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.
       </p>
       ${episodesBySaga['donut saga'].map((e) => e.link).join("\n")}
+
+      <h2>The Creation Mythos</h2>
+      <p>
+        These stories form a world-spanning epic about the struggles of gods, empires, and keeping a party of adventurers together admist frequently changing scheduling conflicts.
+      </p>
+      ${episodesBySaga['creation mythos'].map((e) => e.link).join("\n")}
+
+      <h2>Ex-Cultists of Elysium</h2>
+      <p>
+        These stories tell the saga of a brave group of ex-cultists adrift in time who tried to save the world from demonic corruption.
+        It's a direct sequel to The Creation Mythos, set in a world reshaped by the events of that campaign.
+      </p>
+      ${episodesBySaga.elysium.map((e) => e.link).join("\n")}
+
+      <h2>The Tale of Praxis</h2>
+      <p>
+        These stories take place in a world reshaped by a magical apocalypse that left only one city standing.
+        A thousand years later, civilization expands as magic becomes acceptable again after centuries of prohibition, but dangerous forces work to reshape this budding future toward uncertain ends...
+      </p>
+      ${episodesBySaga.praxis.map((e) => e.link).join("\n")}
     `,
   });
   fs.mkdirSync(`${outputDirectoryPath}/tales`, { recursive: true });

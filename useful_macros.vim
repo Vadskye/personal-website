@@ -1,21 +1,15 @@
-
-" Convert stupid awards from "* Foo" to "<li>Foo</li>"
-/^* €ý,€ý.a€kb €khch$<li>
-
-" Wrap <li> blocks with <ul> for stupid awards
-/[^>]\n  \<li<ul>}€ku€kbÃŠ/u€kb€kb€kbÃŠ/u€kb€kb€kb</ul>
+" Convert various stupid award formats
+/stupid awardsrrSt€kb€kb<h3>Stupid Awards</h3>€k7
+/:\na€kb<ul>n€ku€kd€kd{€ku€@7€kb<€kb€kb</ul>
+/^    [^ ]le€kb<.i€kb€kbli>€@7$$a</li>
+/^\w<ul>n€ku€ku</ul>
 
 " Sort <ul> blocks for stupid awards
-/\<ul€kdgl
+/&€kb^\<ul\>€kd€@7gl
+gg99qj€k7€kd€ku€@7€k7
+ggs^\<li>€kb€kr  <lia€k7
 
-" Convert "1. Foo" to "<li>Foo</li>"
-€khdlech$<li>k
-
-" Wrap paragraphs with <p> tags
-ch}<p>kk
-
-" Convert stupid awards from "\n    Foo" to "  <li>Foo</li>"
-/^\n    [^<]dd<<€khch$<li>
-
-" Convert stupid awards from "    Foo" to "  <li>Foo</li>"
-/^    €ý,€ý.a€kb €khch$<li><<
+" Numberify footnotes
+/^1.€kb\.? €kue<o.€kbl>
+G€@7?\v^\d\.\? </ol>
+/^\d\.?.€kb dne<li>$€@7a</li>
