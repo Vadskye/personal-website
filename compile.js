@@ -68,6 +68,7 @@ function writeTalesHtml(outputDirectoryPath) {
   const episodesBySaga = {
     "creation mythos": [],
     "donut saga": [],
+    "rite of maturity": [],
     elysium: [],
     praxis: [],
   };
@@ -106,14 +107,28 @@ function writeTalesHtml(outputDirectoryPath) {
     body: `
       <h1>Tales of Games Past</h1>
       <p>
-        Whenever I run a major RPG campaign, I send out emails each week summarizing the events of the previous week.
+        Whenever I run a major <a href="/rise/rise.html">Rise</a> campaign, I send out emails each week summarizing the events of the previous week.
         This helps everyone keep track of what's going on, it's fun to write, and it helps any players that missed a week catch up on what they missed.
+        Each session also has "Stupid Awards", which commemorate memorable things that happened during the session in humorous and often pun-filled ways.
       </p>
       <h2>The Donut Saga</h2>
       <p>
         These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.
+        It's pretty short and silly, and a reasonable starting point.
+        The rest of the campains after this one are in chronological order, so there's some <a href="https://tvtropes.org/pmwiki/pmwiki.php/Main/EarlyInstallmentWeirdness">Early Installment Weirdness</a>.
       </p>
       ${episodesBySaga['donut saga'].map((e) => e.link).join("\n")}
+
+      <h2>The Rite of Maturity</h2>
+      <p>
+        These stories tell the story of a group of involuntary do-gooders tasked with helping people as part of an ancient tradition called the Rite of Maturity.
+        The party immediately decided to ignore all of the conveniently obvious quests and just walk south until something interesting happened.
+      </p>
+      <p>
+        This was the first campaign to have weekly email summaries, so some of the early details are tragically lost to time, and the first several emails are very short and only somewhat helpful.
+        We didn't even use Stupid Awards until episode 17!
+      </p>
+      ${episodesBySaga['rite of maturity'].map((e) => e.link).join("\n")}
 
       <h2>The Creation Mythos</h2>
       <p>
