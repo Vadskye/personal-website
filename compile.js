@@ -193,7 +193,22 @@ function main() {
 
   writeTalesHtml(outputDirectoryPath);
 
+  generateRiseCharacterSheetHtml(outputDirectoryPath);
+
   generateRiseBookHtml(outputDirectoryPath);
+}
+
+function generateRiseCharacterSheetHtml(outputDirectoryPath) {
+  // 'recursive' is basically just to avoid errors if it already exists
+  fs.mkdirSync(`${outputDirectoryPath}/rise/character-sheet`, { recursive: true });
+  // TODO: make this a CLI argument so it's easier to use on different systems
+  const sheetDirectoryPath = `${__dirname}/../Rise/character_sheet/paper_sheet`;
+  const sheetFiles = fs.readdirSync(sheetDirectoryPath);
+  for (const filename of sheetFiles) {
+    if (filename.includes('.html') || filename.includes('.css')) {
+      fs.copyFileSync(`${sheetDirectoryPath}/${filename}`, `${outputDirectoryPath}/rise/character-sheet/${filename}`);
+    }
+  }
 }
 
 function generateRiseBookHtml(outputDirectoryPath) {
