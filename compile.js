@@ -115,7 +115,7 @@ function writeTalesHtml(outputDirectoryPath) {
       <p>
         These stories tell the short tale of a ragtag group of adventurers who woke up in a basement and tried to make the world a slightly more donut-filled place.
         It's pretty short and silly, and a reasonable starting point.
-        The rest of the campains after this one are in chronological order, so there's some <a href="https://tvtropes.org/pmwiki/pmwiki.php/Main/EarlyInstallmentWeirdness">Early Installment Weirdness</a>.
+        The rest of the campains after this one are in chronological order, so there's some <a href="https://tvtropes.org/pmwiki/pmwiki.php/Main/EarlyInstallmentWeirdness">early installment weirdness</a>.
       </p>
       ${episodesBySaga['donut saga'].map((e) => e.link).join("\n")}
 
