@@ -117,7 +117,7 @@ function writeTalesHtml(outputDirectoryPath) {
         It's pretty short and silly, and a reasonable starting point.
         The rest of the campains after this one are in chronological order, so there's some <a href="https://tvtropes.org/pmwiki/pmwiki.php/Main/EarlyInstallmentWeirdness">early installment weirdness</a>.
       </p>
-      ${episodesBySaga['donut saga'].map((e) => e.link).join("\n")}
+      ${episodesBySaga["donut saga"].map((e) => e.link).join("\n")}
 
       <h2>The Rite of Maturity</h2>
       <p>
@@ -128,13 +128,13 @@ function writeTalesHtml(outputDirectoryPath) {
         This was the first campaign to have weekly email summaries, so some of the early details are tragically lost to time, and the first several emails are very short and only somewhat helpful.
         We didn't even use Stupid Awards until episode 17!
       </p>
-      ${episodesBySaga['rite of maturity'].map((e) => e.link).join("\n")}
+      ${episodesBySaga["rite of maturity"].map((e) => e.link).join("\n")}
 
       <h2>The Creation Mythos</h2>
       <p>
         These stories form a world-spanning epic about the struggles of gods, empires, and keeping a party of adventurers together admist frequently changing scheduling conflicts.
       </p>
-      ${episodesBySaga['creation mythos'].map((e) => e.link).join("\n")}
+      ${episodesBySaga["creation mythos"].map((e) => e.link).join("\n")}
 
       <h2>Ex-Cultists of Elysium</h2>
       <p>
@@ -158,9 +158,12 @@ function writeTalesHtml(outputDirectoryPath) {
 function generateGlobalIndexHtml() {
   return generateHtml({
     body: `
-      <p>This site has a collection of things I've created. The main attraction is probably the stories of my old RPG campaigns, which are linked along the top. Those were run using the <a href="https://github.com/vadskye/rise">rulebook I'm writing on Github</a>.</p>
+      <p>This site has a collection of things I've created. The main attraction is probably the <a href="/tales">stories of my old RPG campaigns</a>. Those were run using the <a href="https://github.com/vadskye/rise">rulebook I'm writing on Github</a>.</p>
       <p>
         Also, I made some fun custom cards for a board game called <a href="https://sentinelsdigital.com/learntoplay">Sentinels of the Multiverse</a>! You can find them <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2111698527">on this Steam Workshop mod</a>.
+      </p>
+      <p>
+        Or you can just try to get some <a href="/perspective">perspective</a>.
       </p>
     `,
   });
@@ -196,17 +199,24 @@ function main() {
   generateRiseCharacterSheetHtml(outputDirectoryPath);
 
   generateRiseBookHtml(outputDirectoryPath);
+
+  generatePerspectiveHtml(outputDirectoryPath);
 }
 
 function generateRiseCharacterSheetHtml(outputDirectoryPath) {
   // 'recursive' is basically just to avoid errors if it already exists
-  fs.mkdirSync(`${outputDirectoryPath}/rise/character-sheet`, { recursive: true });
+  fs.mkdirSync(`${outputDirectoryPath}/rise/character-sheet`, {
+    recursive: true,
+  });
   // TODO: make this a CLI argument so it's easier to use on different systems
   const sheetDirectoryPath = `${__dirname}/../Rise/character_sheet/paper_sheet`;
   const sheetFiles = fs.readdirSync(sheetDirectoryPath);
   for (const filename of sheetFiles) {
-    if (filename.includes('.html') || filename.includes('.css')) {
-      fs.copyFileSync(`${sheetDirectoryPath}/${filename}`, `${outputDirectoryPath}/rise/character-sheet/${filename}`);
+    if (filename.includes(".html") || filename.includes(".css")) {
+      fs.copyFileSync(
+        `${sheetDirectoryPath}/${filename}`,
+        `${outputDirectoryPath}/rise/character-sheet/${filename}`
+      );
     }
   }
 }
@@ -247,15 +257,32 @@ function restructureGeneratedRiseHtml(filename) {
 }
 
 function writeSentinelsHtml(outputDirectoryPath) {
-  const sentinelsText = fs.readFileSync(`${__dirname}/sentinels/index.html`, 'utf8');
+  const sentinelsText = fs.readFileSync(
+    `${__dirname}/sentinels/index.html`,
+    "utf8"
+  );
   const sentinelsHtml = generateHtml({
     head: `<title>Sentinels of the Multiverse</title>`,
     body: sentinelsText,
   });
   fs.mkdirSync(`${outputDirectoryPath}/sentinels`, { recursive: true });
-  fs.writeFileSync(`${outputDirectoryPath}/sentinels/index.html`, sentinelsHtml);
-  for (const collection of ['dark-souls', 'gatewatch', 'ixalan', 'krumit', 'oots', 'other', 'ravnica']) {
-    const collectionText = fs.readFileSync(`${__dirname}/sentinels/${collection}.html`, 'utf8');
+  fs.writeFileSync(
+    `${outputDirectoryPath}/sentinels/index.html`,
+    sentinelsHtml
+  );
+  for (const collection of [
+    "dark-souls",
+    "gatewatch",
+    "ixalan",
+    "krumit",
+    "oots",
+    "other",
+    "ravnica",
+  ]) {
+    const collectionText = fs.readFileSync(
+      `${__dirname}/sentinels/${collection}.html`,
+      "utf8"
+    );
     const titleMatch = collectionText.match(/<h1>(.*)<\/h1>/);
     if (!(titleMatch && titleMatch[1])) {
       throw new Error(
@@ -266,8 +293,28 @@ function writeSentinelsHtml(outputDirectoryPath) {
       head: `<title>${titleMatch[1]}</title>`,
       body: collectionText,
     });
-    fs.writeFileSync(`${outputDirectoryPath}/sentinels/${collection}.html`, collectionHtml);
+    fs.writeFileSync(
+      `${outputDirectoryPath}/sentinels/${collection}.html`,
+      collectionHtml
+    );
   }
+}
+
+function generatePerspectiveHtml(outputDirectoryPath) {
+  const perspectiveDir = "/home/vadskye/github/perspective/build";
+  fs.rmdirSync(`${outputDirectoryPath}/perspective`, {recursive: true});
+  childProcess.execSync(
+    `cp -r "${perspectiveDir}" "${outputDirectoryPath}/perspective"`
+  );
+  // const perspectiveFiles = fs
+  //   .readdirSync(perspectiveDir, { withFileTypes: true })
+  //   .filter((f) => f.isFile());
+  // for (const file of perspectiveFiles) {
+  //   fs.copyFileSync(
+  //     `${perspectiveDir}/${file.name}`,
+  //     `${outputDirectoryPath}/perspective/${file.name}`
+  //   );
+  // }
 }
 
 if (require.main === module) {
