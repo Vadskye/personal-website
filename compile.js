@@ -162,9 +162,6 @@ function generateGlobalIndexHtml() {
       <p>
         Also, I made some fun custom cards for a board game called <a href="https://sentinelsdigital.com/learntoplay">Sentinels of the Multiverse</a>! You can find them <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2111698527">on this Steam Workshop mod</a>.
       </p>
-      <p>
-        Or you can just try to get some <a href="/perspective">perspective</a>.
-      </p>
     `,
   });
 }
@@ -199,8 +196,6 @@ function main() {
   generateRiseCharacterSheetHtml(outputDirectoryPath);
 
   generateRiseBookHtml(outputDirectoryPath);
-
-  generatePerspectiveHtml(outputDirectoryPath);
 }
 
 function generateRiseCharacterSheetHtml(outputDirectoryPath) {
@@ -298,23 +293,6 @@ function writeSentinelsHtml(outputDirectoryPath) {
       collectionHtml
     );
   }
-}
-
-function generatePerspectiveHtml(outputDirectoryPath) {
-  const perspectiveDir = "/home/vadskye/github/perspective/build";
-  fs.rmdirSync(`${outputDirectoryPath}/perspective`, {recursive: true});
-  childProcess.execSync(
-    `cp -r "${perspectiveDir}" "${outputDirectoryPath}/perspective"`
-  );
-  // const perspectiveFiles = fs
-  //   .readdirSync(perspectiveDir, { withFileTypes: true })
-  //   .filter((f) => f.isFile());
-  // for (const file of perspectiveFiles) {
-  //   fs.copyFileSync(
-  //     `${perspectiveDir}/${file.name}`,
-  //     `${outputDirectoryPath}/perspective/${file.name}`
-  //   );
-  // }
 }
 
 if (require.main === module) {
