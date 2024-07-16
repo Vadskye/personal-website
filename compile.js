@@ -175,7 +175,10 @@ function generateHtml({ body, head } = {}) {
   }
   return pageTemplateHtml
     .replace("$head", head || "")
-    .replace("$body", body || "");
+    .replace("$body", body || "")
+    .replace(/sparkleemojiplaceholder/g, "✨")
+    .replace(/poisonemojiplaceholder/g, "🧪")
+    .replace(/potionemojiplaceholder/g, "⚗️");
 }
 
 function main() {
@@ -194,6 +197,8 @@ function main() {
   writeTalesHtml(outputDirectoryPath);
 
   generateRiseCharacterSheetHtml(outputDirectoryPath);
+
+  generateRiseImages(outputDirectoryPath);
 
   generateRiseBookHtml(outputDirectoryPath);
 }
@@ -214,6 +219,12 @@ function generateRiseCharacterSheetHtml(outputDirectoryPath) {
       );
     }
   }
+}
+
+function generateRiseImages(outputDirectoryPath) {
+  childProcess.execSync(
+    `cp -r ${__dirname}/../Rise/core_book/images ${outputDirectoryPath}/rise`
+  );
 }
 
 function generateRiseBookHtml(outputDirectoryPath) {
