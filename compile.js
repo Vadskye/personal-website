@@ -284,6 +284,7 @@ function writeSentinelsHtml(outputDirectoryPath) {
     "oots",
     "other",
     "ravnica",
+    "strixhaven",
   ]) {
     const collectionText = fs.readFileSync(
       `${__dirname}/sentinels/${collection}.html`,
