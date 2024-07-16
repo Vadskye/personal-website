@@ -281,6 +281,7 @@ function writeSentinelsHtml(outputDirectoryPath) {
     "gatewatch",
     "ixalan",
     "krumit",
+    "magic_misc",
     "oots",
     "other",
     "ravnica",
