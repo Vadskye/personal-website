@@ -278,10 +278,11 @@ function writeSentinelsHtml(outputDirectoryPath) {
   );
   for (const collection of [
     "dark-souls",
+    "dr-mcninja",
     "gatewatch",
     "ixalan",
     "krumit",
-    "magic_misc",
+    "magic-misc",
     "oots",
     "other",
     "ravnica",
