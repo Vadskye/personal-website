@@ -223,7 +223,7 @@ function generateRiseCharacterSheetHtml(outputDirectoryPath) {
 
 function generateRiseImages(outputDirectoryPath) {
   childProcess.execSync(
-    `cp -r ${__dirname}/../Rise/core_book/images ${outputDirectoryPath}/rise`
+    `cp -r ${__dirname}/../Rise/lib/images ${outputDirectoryPath}/rise`
   );
 }
 
