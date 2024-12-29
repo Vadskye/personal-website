@@ -222,8 +222,10 @@ function generateRiseCharacterSheetHtml(outputDirectoryPath) {
 }
 
 function generateRiseImages(outputDirectoryPath) {
+  const imagePath = `${outputDirectoryPath}/lib/images`;
+  fs.mkdirSync(imagePath, { recursive: true });
   childProcess.execSync(
-    `cp -r ${__dirname}/../Rise/lib/images ${outputDirectoryPath}/rise`
+    `cp -r ${__dirname}/../Rise/lib/images ${imagePath}`
   );
 }
 
